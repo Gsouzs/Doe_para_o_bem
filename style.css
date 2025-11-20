@@ -11,6 +11,9 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     font-family: "Louis George Cafe";
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;     /* IE/Edge */
+    user-select: none;
 }
 
 html, body {
@@ -55,6 +58,7 @@ main {
 }
 
 .cards {
+    height: 200px;
     width: 100%;
     padding: 18px;
     border-radius: 18px;
@@ -133,4 +137,26 @@ main {
 
 .cards:active {
     background-color: #f0f0f0;
+}
+
+.causa-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+.causa-info {
+    flex-grow: 1; /* cresce livremente */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+
+.causa-rodape {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }

@@ -19,13 +19,14 @@ function criarCardParaCausa(id, causa) {
   card.dataset.causaId = id;
 
   card.innerHTML = `
-    <div class="causa-container">
-      
-      <div class="causa-info">
-        <h2>${nome}</h2>
-        <h3>${empresa} • ${local.toString().replace(/_/g, ' ')}</h3>
-      </div>
+  <div class="causa-container">
 
+    <div class="causa-info">
+      <h2>${nome}</h2>
+      <h3>${empresa} • ${local.toString().replace(/_/g, ' ')}</h3>
+    </div>
+
+    <div class="causa-rodape">
       <div class="meta">
         <div class="meta-info">
           <span>Meta: <strong>${formatCurrency(meta)} / ${formatCurrency(arrecadado)}</strong></span>
@@ -41,6 +42,8 @@ function criarCardParaCausa(id, causa) {
         <span>Doar &gt;</span>
       </div>
     </div>
+
+  </div>
 `;
 
 
