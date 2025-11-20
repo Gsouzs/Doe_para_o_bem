@@ -20,31 +20,30 @@ function criarCardParaCausa(id, causa) {
 
   card.innerHTML = `
     <div class="causa-container">
-      <h2>${nome}</h2>
-      <h3>${empresa} • ${local.toString().replace(/_/g, ' ')}</h3>
-      <div class="meta-info">
-        <span>Meta: <strong>${formatCurrency(meta)}/${formatCurrency(arrecadado)}</strong></span>
-        <span class="meta-percent">
-          <small>${porcentagem.toFixed(1)}%</small>
-        </span>
-        <br>
+      
+      <div class="causa-info">
+        <h2>${nome}</h2>
+        <h3>${empresa} • ${local.toString().replace(/_/g, ' ')}</h3>
       </div>
 
-      <div class="progress">
-        <div class="progresso" role="progressbar" style="width: ${porcentagem}%;" aria-valuenow="${porcentagem}" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="meta">
+        <div class="meta-info">
+          <span>Meta: <strong>${formatCurrency(meta)} / ${formatCurrency(arrecadado)}</strong></span>
+          <span class="meta-percent"><small>${porcentagem.toFixed(1)}%</small></span>
+        </div>
+
+        <div class="progress">
+          <div class="progresso" style="width: ${porcentagem}%"></div>
+        </div>
       </div>
 
+      <div class="card-cta">
+        <span>Doar &gt;</span>
+      </div>
     </div>
+`;
 
-    <div class="container-abrir">
-      <button class="btn-doar" type="button">Doar &gt;</button>
-    </div>
-  `;
 
-  const btn = card.querySelector('.btn-doar');
-  btn.addEventListener('click', () => {
-    alert(`Você escolheu doar para: "${nome}"\nResponsável: ${empresa}`);
-  });
 
   return card;
 }
