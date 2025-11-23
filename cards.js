@@ -44,14 +44,9 @@ function criarCardParaCausa(id, causa, arrecadado) {
     </div>
   `;
 
-
-
-
   card.addEventListener("click", () => {
     window.location.href = `pagamento.html?id=${id}`;
   });
-
-
 
   return card;
 }
@@ -61,7 +56,6 @@ async function carregarCausas() {
   container.innerHTML = "";
 
   try {
-
     const causasRef = collection(db, "causas");
     const snapshotCausas = await getDocs(causasRef);
 
@@ -74,7 +68,7 @@ async function carregarCausas() {
 
       let arrecadado = 0;
       snapshotDoacoes.forEach((doacao) => {
-        arrecadado += Number(doacao.data().Valor || 0);
+        arrecadado += Number(doacao.data().valor || 0);
       });
 
       const card = criarCardParaCausa(causaId, dadosCausa, arrecadado);
@@ -87,3 +81,62 @@ async function carregarCausas() {
 }
 
 carregarCausas();
+
+
+
+// Regras do DB
+
+
+// Permite ler qualquer documento dentro da coleção causas mas não permite escrever
+// Permite ler todas as doações de cada causa.
+// Permite criar novas doações, mas apenas com as chaves valor e data
+// Não permite atualizar ou deletar doações 
+// Permite criar registros completos do doador mas ninguém pode ler, atualizar ou deletar esses documentos
+
+// Isso foi definido para atender ao OWASP A01 - Broken Access Control
+
+
+
+// rules_version = '2';
+
+// service cloud.firestore {
+//   match /databases/{database}/documents {
+
+//     match /causas/{causaId} {
+//       allow read: if true;
+//       allow write: if false;
+
+//       match /doacoes/{docId} {
+//         allow read: if true;
+//         allow create: if
+//           request.resource.data.keys().hasOnly(["valor", "data"]);
+//         allow update, delete: if false;
+//       }
+//     }
+
+//   match /dados_doacoes/{docId} {
+//     allow create: if
+//       request.resource.data.keys().hasOnly([
+//         "causaID",
+//         "valor",
+//         "data",
+//         "email",
+//         "nome",
+//         "instituicao",
+//         "descricao",
+//         "meta",
+//         "userAgent",
+//         "idioma",
+//         "dataProcessada",
+//         "ip"
+//       ]);
+//     allow read, update, delete: if false;
+// 	}
+
+
+//     match /{document=**} {
+//       allow read, write: if false;
+//     }
+//   }
+// }
+
