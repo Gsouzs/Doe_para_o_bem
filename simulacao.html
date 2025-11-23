@@ -28,15 +28,26 @@
 
   <h2>Simulação de Pagamento</h2>
     
+  <div id="dados-container">
     <p><strong>Nome:</strong> <span id="nomePessoa"></span></p>
     <p><strong>E-mail:</strong> <span id="emailPessoa"></span></p>
-    <p id="valor"></p>
+    <p><strong>Instituição:</strong> <span id="Instituicao"></span></p>
+    <p><strong>Descrição:</strong> <span id="descricao"></span></p>
+    <p><strong>Valor da doação:</strong> <span id="valor"></span></p>
+    <p><strong>Método de pagamento:</strong> <span>Pix</span></p>
+    
+  </div>
 
+  <div id="pixContainer" style="display:none; margin-top:20px;">
+      <label><strong>Código PIX (Copia e Cola):</strong></label>
+      <div style="display:flex; gap:10px; margin-top:6px;">
+          <textarea id="pixCode" readonly style="flex:1; padding:10px; border-radius:10px; font-size:0.9rem;"></textarea>
+          <button id="btnCopiarPix" style="padding:10px; border-radius:10px; cursor:pointer;">Copiar</button>
+      </div>
+  </div>
 
-  <button id="btnConfirmar" 
-    style="margin-top: 20px; width: 100%; padding: 15px; background: #00C46C; color: white; border-radius: 12px; font-size: 1.1rem; border: none;">
-    Confirmar Pagamento
-  </button>
+<button id="btnConfirmar">Gerar código PIX</button>
+
 
   <script type="module" src="simulacao.js"></script>
   </main>

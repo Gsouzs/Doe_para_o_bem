@@ -11,8 +11,8 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     font-family: "Louis George Cafe";
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none;     /* IE/Edge */
+    -webkit-user-select: none;
+    -ms-user-select: none;
     user-select: none;
 }
 
@@ -201,4 +201,22 @@ main {
 #causa-expandido * {
     position: relative;
     z-index: 2;
+}
+
+#dados-container{
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e4e4e4;
+    box-shadow: #00000073 0px 0px 10px;
+    border-radius: 10px;
+}
+
+#btnConfirmar{
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #22DD55;
+    border:none;
+    color: #fff;
+    font-size: 16px;
 }
