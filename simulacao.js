@@ -7,6 +7,27 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
+
+function sanitize(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+
+// Função sanitize criada para evitar injeções no código - OWASP A03 – Injection (HTML Injection / XSS)
+
+// Escapa caracteres essenciais usados em ataques XSS
+// & --> &amp;
+// < --> &lt;
+// > --> &gt;
+// " --> &quot;
+// ' --> &#39;
+
+
 const params = new URLSearchParams(window.location.search);
 
 const causaID = params.get("id");
@@ -14,9 +35,34 @@ const valor = Number(params.get("valor") || 0);
 const nome = params.get("nome") ? decodeURIComponent(params.get("nome")) : "Visitante";
 const email = params.get("email") ? decodeURIComponent(params.get("email")) : "Sem e-mail";
 
+
+
+// validações para evitar informações incorretas para não querbrar o site ou o js (poderia ser mais complexo e elaborado)
+
+if (isNaN(valor) || valor <= 0 || valor > 5000) {
+  alert("Valor inválido.");
+  window.location.href = "index.html";
+  throw new Error("Valor inválido");
+}
+
+if (!nome || nome.length > 70) {
+  alert("Nome inválido.");
+  window.location.href = "index.html";
+  throw new Error("Nome inválido");
+}
+
+if (!email || !email.includes("@") || email.length > 100) {
+  alert("Email inválido.");
+  window.location.href = "index.html";
+  throw new Error("Email inválido");
+}
+
+
+
+
 document.getElementById("valor").textContent = valor.toFixed(2);
-document.getElementById("nomePessoa").textContent = nome;
-document.getElementById("emailPessoa").textContent = email;
+document.getElementById("nomePessoa").textContent = sanitize(nome); // aplicado o sanitize
+document.getElementById("emailPessoa").textContent = sanitize(email); // aplicado o sanitize
 
 const campoInstituicao = document.getElementById("Instituicao");
 const campoDescricao = document.getElementById("descricao");
@@ -34,8 +80,8 @@ async function carregarCausa() {
 
   if (snap.exists()) {
     const dados = snap.data();
-    campoInstituicao.textContent = dados.Empresa || "Não informado";
-    campoDescricao.textContent = dados.Descricao || "Sem descrição";
+    campoInstituicao.textContent = sanitize(dados.Empresa || "Não informado"); // aplicado o sanitize
+    campoDescricao.textContent = sanitize(dados.Descricao || "Sem descrição"); // aplicado o sanitize
   }
 }
 
@@ -79,8 +125,8 @@ setTimeout(async () => {
 
     await addDoc(collection(db, "dados_doacoes"), {
       causaID: causaID,
-      nome: nome,
-      email: email,
+      nome: nome, // não é necessário o sanitize na gravação dos dados
+      email: email, // não é necessário o sanitize na gravação dos dados
       valor: valor,
       data: serverTimestamp(),
 

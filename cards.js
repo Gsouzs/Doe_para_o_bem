@@ -6,11 +6,36 @@ const formatCurrency = (value) =>
 
 const clamp = (v, min = 0, max = 100) => Math.max(min, Math.min(max, v));
 
+
+function sanitize(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+
+// Função sanitize criada para evitar injeções no código - OWASP A03 – Injection (HTML Injection / XSS)
+
+// Escapa caracteres essenciais usados em ataques XSS
+// & --> &amp;
+// < --> &lt;
+// > --> &gt;
+// " --> &quot;
+// ' --> &#39;
+
+
+
+
+
+
 function criarCardParaCausa(id, causa, arrecadado) {
-  const nome = causa.Causa || "Sem título";
-  const empresa = causa.Empresa || "Organização";
-  const local = causa.Local || "geral";
-  const meta = Number(causa.Meta) || 0;
+  const nome = sanitize(causa.Causa || "Sem título"); // aplicado o sanitize, mesmo sendo um campo inserido somente por usuários permitidos, pensando na escalabilidade, é uma boa pratica e pode mitigar vulnerabilidades
+  const empresa = sanitize(causa.Empresa || "Organização"); // aplicado o sanitize
+  const local = sanitize(causa.Local || "geral"); // aplicado o sanitize
+  const meta = Number(causa.Meta) || 0; // não é necessario pois é um número
 
   const porcentagem = meta > 0 ? clamp((arrecadado / meta) * 100, 0, 100) : 0;
 
@@ -45,7 +70,7 @@ function criarCardParaCausa(id, causa, arrecadado) {
   `;
 
   card.addEventListener("click", () => {
-    window.location.href = `pagamento.html?id=${id}`;
+    window.location.href = `pagamento.html?id=${sanitize(id)}`; // aplicado o sanitize por boa pratica
   });
 
   return card;

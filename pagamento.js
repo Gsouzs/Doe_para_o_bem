@@ -2,6 +2,27 @@ import { db } from "./firebase.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 
+
+function sanitize(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+
+// Função sanitize criada para evitar injeções no código - OWASP A03 – Injection (HTML Injection / XSS)
+
+// Escapa caracteres essenciais usados em ataques XSS
+// & --> &amp;
+// < --> &lt;
+// > --> &gt;
+// " --> &quot;
+// ' --> &#39;
+
+
 const params = new URLSearchParams(window.location.search);
 const causaID = params.get("id");
 
@@ -23,9 +44,9 @@ async function carregarCausa() {
 
   if (snap.exists()) {
     const dados = snap.data();
-    nomeEl.textContent = dados.Causa;
-    DescricaoEl.textContent = dados.Descricao;
-    empresaLocalEl.textContent = `${dados.Empresa} • ${dados.Local.replace(/_/g, " ")}`;
+    nomeEl.textContent = sanitize(dados.Causa); // aplicado o sanitize
+    DescricaoEl.textContent = sanitize(dados.Descricao); // aplicado o sanitize
+    empresaLocalEl.textContent = sanitize(`${dados.Empresa} • ${dados.Local.replace(/_/g, " ")}`); // aplicado o sanitize
   }
 }
 
