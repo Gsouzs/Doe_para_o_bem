@@ -40,6 +40,29 @@ const email = params.get("email") ? decodeURIComponent(params.get("email")) : "S
 // validações para evitar informações incorretas para não querbrar o site ou o js (poderia ser mais complexo e elaborado)
 
 if (isNaN(valor) || valor <= 0 || valor > 5000) {
+
+
+
+
+    // Registros de logs para monitoramento OWASP A09 – Logging and Monitoring Failures
+    // Regras que não permitem alteração no DB também foram criadas
+    // match /logs/{docId} {
+    // allow create: if true;
+    // allow read, update, delete: if false;
+    // }
+
+
+    // log adcionado
+    await addDoc(collection(db, "logs"), {
+      acao: "valor_acima_limite",
+      valortent: valor,
+      ip: null,
+      horario: serverTimestamp()
+});
+  
+
+
+
   alert("Valor inválido.");
   window.location.href = "index.html";
   throw new Error("Valor inválido");
@@ -118,6 +141,12 @@ btnCopiar.addEventListener("click", async () => {
   // Boqueia o botão de pagamento por 30 segundos
 
 
+  await addDoc(collection(db, "logs"), {
+  acao: "codigo_pix_gerado",
+  ip: null,
+  horario: serverTimestamp()
+});
+
 
   try {
     await navigator.clipboard.writeText(pixCodeEl.value);
@@ -164,6 +193,14 @@ setTimeout(async () => {
 
   } catch (err) {
     console.error(err);
+
+    // log adcionado
+    await addDoc(collection(db, "logs"), {
+      acao: "falha no pagamento",
+      erro: err,
+      ip: null,
+      horario: serverTimestamp()
+});
     alert("Erro ao registrar doação. Tente novamente.");
   }
 
